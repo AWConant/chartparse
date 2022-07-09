@@ -1,3 +1,13 @@
+"""For functionality useful for all event track objects.
+
+Most notably, :class:`~chartparse.instrument.InstrumentTrack`, :class:`~chartparse.sync.SyncTrack`,
+and :class:`~chartparse.globalevents.GlobalEventsTrack` are considered to be event tracks.
+
+.. _Google Python Style Guide:
+    http://google.github.io/styleguide/pyguide.html
+
+"""
+
 from __future__ import annotations
 
 from collections.abc import Callable, Iterable

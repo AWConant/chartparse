@@ -1,3 +1,10 @@
+"""For type annotation related utilities.
+
+.. _Google Python Style Guide:
+    http://google.github.io/styleguide/pyguide.html
+
+"""
+
 from __future__ import annotations
 
 from abc import abstractmethod

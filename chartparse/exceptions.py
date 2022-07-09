@@ -1,3 +1,10 @@
+"""For custom exceptions raised in this package.
+
+.. _Google Python Style Guide:
+    http://google.github.io/styleguide/pyguide.html
+
+"""
+
 from __future__ import annotations
 
 from collections.abc import Collection

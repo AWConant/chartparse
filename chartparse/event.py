@@ -1,3 +1,10 @@
+"""For functionality useful for all event objects.
+
+.. _Google Python Style Guide:
+    http://google.github.io/styleguide/pyguide.html
+
+"""
+
 from __future__ import annotations
 
 import datetime

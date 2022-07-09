@@ -1,3 +1,10 @@
+"""For abstract data structures.
+
+.. _Google Python Style Guide:
+    http://google.github.io/styleguide/pyguide.html
+
+"""
+
 from __future__ import annotations
 
 from collections.abc import Callable, Iterable, Iterator, Sequence

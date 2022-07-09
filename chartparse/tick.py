@@ -1,3 +1,10 @@
+"""For functionality relating to tick arithmetic.
+
+.. _Google Python Style Guide:
+    http://google.github.io/styleguide/pyguide.html
+
+"""
+
 from enum import Enum
 
 

@@ -1,4 +1,20 @@
-# TODO: Add module docstrings everywhere.
+"""For representing the data of a ``.chart`` file as a object.
+
+This module is the main entrypoint to this package. Typically, a
+developer needs only to create a ``Chart`` object and then inspect
+its attributes:
+
+Example:
+    Creating a ``Chart`` object::
+
+        from chartparse.chart import Chart
+
+        chart = Chart.from_file("path/to/file.chart")
+
+.. _Google Python Style Guide:
+    http://google.github.io/styleguide/pyguide.html
+
+"""
 
 from __future__ import annotations
 
