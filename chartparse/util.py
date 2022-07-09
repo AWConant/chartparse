@@ -31,7 +31,14 @@ class DictReprMixin(object):
 
 
 class DictReprTruncatedSequencesMixin(object):
-    """A mixin implementing ``__repr__`` by dumping ``__dict__()`` with truncated sequences."""
+    """A mixin implementing ``__repr__`` by dumping ``__dict__()`` with truncated sequences.
+
+    Specifically, any instance attribute of type `Sequence
+    <https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence>`_ with
+    more than 1 element will be represented as such::
+
+        ["foo", ... 4 more elements]
+    """
 
     def __repr__(self) -> str:  # pragma: no cover
         items = []
