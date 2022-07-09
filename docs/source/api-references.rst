@@ -1,5 +1,7 @@
-chartparse package
-==================
+.. _api-references:
+
+API References
+==============
 
 chartparse.chart module
 -----------------------

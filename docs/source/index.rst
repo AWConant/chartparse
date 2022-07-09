@@ -3,14 +3,27 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to chartparse's documentation!
-======================================
+chartparse: a Python package for parsing Guitar Hero .chart files
+=================================================================
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
-   chartparse
+   tutorials
+   topic-guides
+   api-references
+   how-to-guides
+
+How the documentation is organized
+==================================
+
+There are four main sections of the documentation:
+
+* :ref:`tutorials` act as a quickstart for new users.
+* :ref:`topic-guides` discuss and define key concepts.
+* :ref:`api-references` describe and define the API in exhaustive detail.
+* :ref:`how-to-guides` are recipes for dealing with specific scenarios.
 
 Indices and tables
 ==================
