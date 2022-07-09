@@ -7,106 +7,64 @@ chartparse.chart module
 -----------------------
 
 .. automodule:: chartparse.chart
-   :members:
-   :inherited-members:
-   :undoc-members:
-   :show-inheritance:
-
-chartparse.datastructures module
---------------------------------
-
-.. automodule:: chartparse.datastructures
-   :members:
-   :inherited-members:
-   :undoc-members:
-   :show-inheritance:
-
-chartparse.event module
------------------------
-
-.. automodule:: chartparse.event
-   :members:
-   :inherited-members:
-   :undoc-members:
-   :show-inheritance:
-
-chartparse.exceptions module
-----------------------------
-
-.. automodule:: chartparse.exceptions
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-chartparse.globalevents module
-------------------------------
-
-.. automodule:: chartparse.globalevents
-   :members:
-   :inherited-members:
-   :undoc-members:
-   :show-inheritance:
-
-chartparse.hints module
-------------------------------
-
-.. automodule:: chartparse.hints
-   :members:
-   :inherited-members:
-   :undoc-members:
-   :show-inheritance:
-
-chartparse.instrument module
-----------------------------
-
-.. automodule:: chartparse.instrument
-   :members:
-   :inherited-members:
-   :undoc-members:
-   :show-inheritance:
 
 chartparse.metadata module
 --------------------------
 
 .. automodule:: chartparse.metadata
-   :members:
-   :inherited-members:
-   :undoc-members:
-   :show-inheritance:
+
+chartparse.globalevents module
+------------------------------
+
+.. automodule:: chartparse.globalevents
 
 chartparse.sync module
 ----------------------
 
 .. automodule:: chartparse.sync
-   :members:
-   :inherited-members:
-   :undoc-members:
-   :show-inheritance:
 
-chartparse.tick module
+chartparse.instrument module
+----------------------------
+
+.. automodule:: chartparse.instrument
+
+chartparse.event module
 -----------------------
 
-.. automodule:: chartparse.tick
-   :members:
-   :inherited-members:
-   :undoc-members:
-   :show-inheritance:
+.. automodule:: chartparse.event
 
 chartparse.track module
 -----------------------
 
 .. automodule:: chartparse.track
-   :members:
-   :inherited-members:
    :private-members:
-   :undoc-members:
-   :show-inheritance:
+
+chartparse.tick module
+-----------------------
+
+.. automodule:: chartparse.tick
+
+chartparse.exceptions module
+----------------------------
+
+..
+    no-inherited-members prevents an error: `Handler <function process_docstring at
+    0x7f3abc09c1f0> for event 'autodoc-process-docstring' threw an exception (exception: no
+    signature found for builtin <method 'with_traceback' of 'BaseException' objects>)`
+.. automodule:: chartparse.exceptions
+   :no-inherited-members:
 
 chartparse.util module
 ----------------------
 
 .. automodule:: chartparse.util
-   :members:
-   :inherited-members:
-   :undoc-members:
-   :show-inheritance:
+
+chartparse.datastructures module
+--------------------------------
+
+.. automodule:: chartparse.datastructures
+
+chartparse.hints module
+------------------------------
+
+.. automodule:: chartparse.hints

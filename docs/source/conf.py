@@ -59,8 +59,8 @@ html_static_path = []
 
 autodoc_default_options = {
     'member-order': 'bysource',
+    'members': True,
+    'inherited-members': True,
+    'undoc-members': True,
+    'show-inheritance': True,
 }
-
-autodoc_default_flags = [
-    'inherited-members',
-]

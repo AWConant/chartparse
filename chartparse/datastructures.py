@@ -14,7 +14,16 @@ from chartparse.hints import ComparableT, T
 
 
 class ImmutableList(Sequence[T]):
-    """A ``list`` equivalent that cannot be mutated."""
+    """A ``list`` equivalent that cannot be mutated.
+
+    .. automethod:: __getitem__
+    .. automethod:: __iter__
+    .. automethod:: __repr__
+    .. automethod:: __len__
+    .. automethod:: __contains__
+    .. automethod:: __reversed__
+    .. automethod:: __eq__
+    """
 
     _seq: Sequence[T]
 
