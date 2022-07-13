@@ -29,10 +29,8 @@ author = 'Andrew Conant'
 # ones.
 extensions = [
     'sphinx.ext.napoleon',
-    #'sphinx_toolbox.more_autodoc.typevars',
     'sphinx_toolbox.more_autodoc.typehints',
     'sphinx_toolbox.more_autodoc.genericalias',
-    #'sphinx_toolbox.more_autodoc.autoprotocol',
     'sphinx_autodoc_typehints',
 ]
 
