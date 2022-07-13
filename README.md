@@ -33,6 +33,9 @@ expert_guitar.note_events[:10]
 expert_guitar.star_power_events[:3]
 ```
 
+See the [documentation](https://chartparse-gh.readthedocs.io/en/latest/) for more detailed
+guidance.
+
 Note: this software is tested only with .chart files that are written by
 [Moonscraper](https://github.com/FireFox2000000/Moonscraper-Chart-Editor).
 Files written by other editors or are handwritten may produce undefined
