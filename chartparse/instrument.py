@@ -162,7 +162,6 @@ class InstrumentTrack(EventTrack, DictPropertiesEqMixin, DictReprTruncatedSequen
     difficulty: Difficulty
     """This track's difficulty setting."""
 
-    # TODO: Make this private.
     section_name: str
     """The concatenation of this track's difficulty and instrument (in that order)."""
 
