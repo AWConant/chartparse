@@ -463,7 +463,7 @@ class TestNotesPerSecond(object):
         def timestamp_at_tick_side_effect(tick):
             return (tick_to_bound(tick),)
 
-        mock_timestamp_at_tick = mocker.patch.object(
+        mocker.patch.object(
             Chart,
             "_timestamp_at_tick",
             side_effect=timestamp_at_tick_side_effect,
