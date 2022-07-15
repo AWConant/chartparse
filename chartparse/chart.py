@@ -36,6 +36,7 @@ from chartparse.metadata import Metadata
 from chartparse.sync import SyncTrack
 from chartparse.util import DictPropertiesEqMixin, DictReprTruncatedSequencesMixin
 
+_zero_timedelta = datetime.timedelta(0)
 _max_timedelta = datetime.datetime.max - datetime.datetime.min
 
 
@@ -179,7 +180,7 @@ class Chart(DictPropertiesEqMixin, DictReprTruncatedSequencesMixin):
         return sections
 
     def _populate_bpm_event_timestamps(self) -> None:
-        self.sync_track.bpm_events[0].timestamp = datetime.timedelta(0)
+        self.sync_track.bpm_events[0].timestamp = _zero_timedelta
         for i, cur_event in enumerate(
             _iterate_from_second_elem(self.sync_track.bpm_events), start=1
         ):
@@ -301,7 +302,7 @@ class Chart(DictPropertiesEqMixin, DictReprTruncatedSequencesMixin):
         def event_is_eligible_by_time(note: NoteEvent) -> bool:
             assert note.timestamp is not None
             lower_bound: datetime.timedelta = (
-                start_time if start_time is not None else datetime.timedelta(0)
+                start_time if start_time is not None else _zero_timedelta
             )
             upper_bound: datetime.timedelta = end_time if end_time is not None else _max_timedelta
             return lower_bound <= note.timestamp <= upper_bound
@@ -311,7 +312,7 @@ class Chart(DictPropertiesEqMixin, DictReprTruncatedSequencesMixin):
             lower_bound: datetime.timedelta = (
                 datetime.timedelta(seconds=start_seconds)
                 if start_seconds is not None
-                else datetime.timedelta(0)
+                else _zero_timedelta
             )
             upper_bound: datetime.timedelta = (
                 datetime.timedelta(seconds=end_seconds)
