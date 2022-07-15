@@ -291,6 +291,11 @@ def event():
     return Event(_default_tick)
 
 
+@pytest.fixture
+def bare_note_event():
+    return NoteEvent.__new__(NoteEvent)
+
+
 # TODO: Reorder fixtures sensibly.
 @pytest.fixture
 def bare_special_event():

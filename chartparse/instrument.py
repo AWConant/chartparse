@@ -171,6 +171,14 @@ class InstrumentTrack(EventTrack, DictPropertiesEqMixin, DictReprTruncatedSequen
     star_power_events: Sequence[StarPowerEvent]
     """An (instrument, difficulty) pair's ``StarPowerEvent`` objects."""
 
+    _last_note_timestamp: datetime.timedelta
+    """The timestamp at which the :attr:`~chartparse.instrument.NoteEvent.sustain` value of the
+    last :class:`~chartparse.instrument.NoteEvent` ends.
+
+    If that event has no :attr:`~chartparse.instrument.NoteEvent.sustain` value, then this is just
+    the timestamp of that :class:`~chartparse.instrument.NoteEvent`.
+    """
+
     _min_note_instrument_track_index = 0
     _max_note_instrument_track_index = 4
     _open_instrument_track_index = 7
@@ -422,6 +430,9 @@ class NoteEvent(Event):
                     "values for exactly the active note lanes."
                 )
 
+    # TODO: None and 0 are equivalent values for a SustainListT element, but None is not a valid
+    # value for a ComplexNoteSustainT. We should instead change SustainListT to be list[int] and
+    # simply use 0 when the note is unsustained.
     @staticmethod
     def _refine_sustain(sustain: ComplexNoteSustainT) -> ComplexNoteSustainT:
         if isinstance(sustain, list):
@@ -489,6 +500,19 @@ class NoteEvent(Event):
             to_join.extend([" [hopo_state=", "".join(flags), "]"])
 
         return "".join(to_join)
+
+    @property
+    def longest_sustain(self) -> int:
+        if isinstance(self.sustain, int):
+            return self.sustain
+        elif isinstance(self.sustain, list):
+            if all(s is None for s in self.sustain):
+                raise ValueError("all sustain values are `None`")
+            return max(s for s in self.sustain if s is not None)
+        else:
+            raise RuntimeError(
+                f"sustain {self.sustain} must be type list, or int."
+            )  # pragma: no cover
 
 
 SpecialEventT = TypeVar("SpecialEventT", bound="SpecialEvent")

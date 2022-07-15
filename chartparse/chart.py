@@ -84,6 +84,7 @@ class Chart(DictPropertiesEqMixin, DictReprTruncatedSequencesMixin):
                 self._populate_event_timestamps(track.note_events)
                 self._populate_event_timestamps(track.star_power_events)
                 self._populate_note_event_hopo_states(track.note_events)
+                self._populate_last_note_timestamp(track)
 
     _required_sections = ("Song", "SyncTrack")
     _instrument_track_name_to_instrument_difficulty_pair = {
@@ -201,6 +202,13 @@ class Chart(DictPropertiesEqMixin, DictReprTruncatedSequencesMixin):
             )
             event.timestamp = timestamp
 
+    def _populate_last_note_timestamp(self, track: InstrumentTrack) -> None:
+        if len(track.note_events) == 0:
+            return
+        last_event = track.note_events[-1]
+        last_tick = last_event.tick + last_event.longest_sustain
+        track._last_note_timestamp, _ = self._timestamp_at_tick(last_tick)
+
     def _populate_note_event_hopo_states(self, events: Sequence[NoteEvent]) -> None:
         if not events:
             return
@@ -235,8 +243,6 @@ class Chart(DictPropertiesEqMixin, DictReprTruncatedSequencesMixin):
         seconds_per_tick = 1 / ticks_per_second
         return ticks * seconds_per_tick
 
-    # TODO: Calculate this over the actual interval, not the interval formed by the first and last
-    # notes.
     def notes_per_second(
         self,
         instrument: Instrument,
@@ -248,7 +254,7 @@ class Chart(DictPropertiesEqMixin, DictReprTruncatedSequencesMixin):
         start_seconds: Optional[float] = None,
         end_seconds: Optional[float] = None,
     ) -> float:
-        """Returns the average notes per second from the first and last note in the interval.
+        """Returns the average notes per second over the input interval.
 
         More specifically, this calculates the number of :class:`~chartparse.instrument.NoteEvent`
         objects per second. Chords do not count as multiple "notes" in one instant.
@@ -274,7 +280,7 @@ class Chart(DictPropertiesEqMixin, DictReprTruncatedSequencesMixin):
             end_seconds: The end of the interval.
 
         Returns:
-            The average notes per second value over the interval formed by the first and last note.
+            The average notes per second value over the input interval.
 
         Raises:
             ValueError: If more than one of ``start_time``, ``start_tick``, and ``start_seconds``
@@ -292,45 +298,6 @@ class Chart(DictPropertiesEqMixin, DictReprTruncatedSequencesMixin):
                 f"no more than one of start_time {start_time}, start_seconds {start_seconds}, "
                 f"and start_tick {start_tick} can be non-None"
             )
-        all_start_args_none = num_of_start_args_none == len(start_args)
-
-        def event_is_eligible_by_tick(note: NoteEvent) -> bool:
-            lower_bound: int = start_tick if start_tick is not None else 0
-            upper_bound: float = end_tick if end_tick is not None else float("inf")
-            return lower_bound <= note.tick <= upper_bound
-
-        def event_is_eligible_by_time(note: NoteEvent) -> bool:
-            assert note.timestamp is not None
-            lower_bound: datetime.timedelta = (
-                start_time if start_time is not None else _zero_timedelta
-            )
-            upper_bound: datetime.timedelta = end_time if end_time is not None else _max_timedelta
-            return lower_bound <= note.timestamp <= upper_bound
-
-        def event_is_eligible_by_seconds(note: NoteEvent) -> bool:
-            assert note.timestamp is not None
-            lower_bound: datetime.timedelta = (
-                datetime.timedelta(seconds=start_seconds)
-                if start_seconds is not None
-                else _zero_timedelta
-            )
-            upper_bound: datetime.timedelta = (
-                datetime.timedelta(seconds=end_seconds)
-                if end_seconds is not None
-                else _max_timedelta
-            )
-            return lower_bound <= note.timestamp <= upper_bound
-
-        if (start_tick is not None) or all_start_args_none:
-            event_is_eligible_fn = event_is_eligible_by_tick
-        elif start_time is not None:
-            event_is_eligible_fn = event_is_eligible_by_time
-        elif start_seconds is not None:
-            event_is_eligible_fn = event_is_eligible_by_seconds
-        else:
-            raise RuntimeError(
-                "unhandled input combination; should be impossible"
-            )  # pragma: no cover
 
         try:
             track = self.instrument_tracks[instrument][difficulty]
@@ -338,23 +305,53 @@ class Chart(DictPropertiesEqMixin, DictReprTruncatedSequencesMixin):
             raise ValueError(
                 f"no instrument track for difficulty {difficulty} instrument {instrument}"
             )
-        events_to_consider = list(filter(event_is_eligible_fn, track.note_events))
-        if len(events_to_consider) < 2:
-            raise ValueError(
-                "cannot determine average notes per second value of phrase with fewer than 2 "
-                f"Events: {events_to_consider}"
-            )
 
-        return self._notes_per_second_from_events(events_to_consider)
+        all_start_args_none = num_of_start_args_none == len(start_args)
+        if (start_tick is not None) or all_start_args_none:
+            lower_bound = (
+                self._timestamp_at_tick(start_tick)[0]
+                if start_tick is not None
+                else _zero_timedelta
+            )
+            upper_bound = (
+                self._timestamp_at_tick(end_tick)[0]
+                if end_tick is not None
+                else track._last_note_timestamp
+            )
+        elif start_time is not None:
+            lower_bound = start_time if start_time is not None else _zero_timedelta
+            upper_bound = end_time if end_time is not None else track._last_note_timestamp
+        elif start_seconds is not None:
+            lower_bound = (
+                datetime.timedelta(seconds=start_seconds)
+                if start_seconds is not None
+                else _zero_timedelta
+            )
+            upper_bound = (
+                datetime.timedelta(seconds=end_seconds)
+                if end_seconds is not None
+                else track._last_note_timestamp
+            )
+        else:
+            raise RuntimeError(
+                "unhandled input combination; should be impossible"
+            )  # pragma: no cover
+
+        return self._notes_per_second(track.note_events, lower_bound, upper_bound)
 
     @staticmethod
-    def _notes_per_second_from_events(events: Sequence[NoteEvent]) -> float:
-        first_event = events[0]
-        last_event = events[-1]
-        assert first_event.timestamp is not None
-        assert last_event.timestamp is not None
-        phrase_duration_seconds = (last_event.timestamp - first_event.timestamp).total_seconds()
-        return len(events) / phrase_duration_seconds
+    def _notes_per_second(
+        events: Sequence[NoteEvent],
+        lower_bound: datetime.timedelta,
+        upper_bound: datetime.timedelta,
+    ) -> float:
+        def is_event_eligible(note: NoteEvent) -> bool:
+            assert note.timestamp is not None
+            return lower_bound <= note.timestamp <= upper_bound
+
+        num_events_to_consider = sum(1 for e in events if is_event_eligible(e))
+        phrase_duration_seconds = (upper_bound - lower_bound).total_seconds()
+        return num_events_to_consider / phrase_duration_seconds
 
     def __str__(self) -> str:  # pragma: no cover
         items = []

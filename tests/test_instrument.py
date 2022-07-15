@@ -438,6 +438,22 @@ class TestNoteEvent(object):
         state = NoteEvent._compute_hopo_state(pytest.default_resolution, current, previous)
         assert state == want
 
+    @pytest.mark.parametrize(
+        "sustain,want",
+        [
+            pytest.param(100, 100),
+            pytest.param([50, 100, None, 200, None], 200),
+        ],
+    )
+    def test_longest_sustain(self, bare_note_event, sustain, want):
+        bare_note_event.sustain = sustain
+        assert bare_note_event.longest_sustain == want
+
+    def test_longest_sustain_raises(self, bare_note_event):
+        bare_note_event.sustain = [None, None, None, None, None]
+        with pytest.raises(ValueError):
+            _ = bare_note_event.longest_sustain
+
 
 class TestSpecialEvent(object):
     test_regex = r"^T (\d+?) V (.*?)$"
