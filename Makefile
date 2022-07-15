@@ -31,8 +31,8 @@ doc:              ## Clean generated docs and compile fresh ones.
 
 .PHONY: black
 black:             ## Format code using black.
-	$(ENV_PREFIX)black -l 99 chartparse/
-	$(ENV_PREFIX)black -l 99 tests/
+	$(ENV_PREFIX)black -l 99 chartparse/ --check
+	$(ENV_PREFIX)black -l 99 tests/ --check
 
 .PHONY: isort
 isort:             ## Format code using isort.
