@@ -473,7 +473,7 @@ class NoteEvent(Event):
             to_join.append("*")
 
         flags = []
-        if self.hopo_state is not None:
+        if hasattr(self, "hopo_state") and self.hopo_state is not None:
             if self.hopo_state == HOPOState.TAP:
                 flags.append("T")
             elif self.hopo_state == HOPOState.HOPO:
