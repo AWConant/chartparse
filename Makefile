@@ -56,9 +56,13 @@ mypy:              ## Run mypy type checker.
 check: lint mypy   ## Run all linters and mypy.
 
 .PHONY: cov
-cov:               ## Run tests.
-	$(ENV_PREFIX)pytest -vv --cov-config .coveragerc --cov-report term-missing \
-			     --cov=chartparse -l --tb=short --maxfail=1 tests/
+cov:               ## Run tests and produce coverage reports if successful.
+	if $(ENV_PREFIX)pytest -vv --cov-config .coveragerc --cov-report term-missing --cov=chartparse -l --tb=short --maxfail=1 tests/
+	then
+		:
+	else
+		exit $?
+	fi
 	$(ENV_PREFIX)coverage xml
 	$(ENV_PREFIX)coverage html
 
